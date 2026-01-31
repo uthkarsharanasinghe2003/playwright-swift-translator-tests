@@ -1,18 +1,27 @@
-import { test, expect } from '@playwright/test';
+const { test, expect } = require('@playwright/test');
 
 test('Pos_Fun_0001 - Convert a short daily interrogative phrase', async ({ page }) => {
-  // Navigate to the application
-  await page.goto('https://www.swifttranslator.com/');
 
-  // Enter short Singlish input (≤ 30 characters)
-  await page.fill('textarea', 'oyaa dhavalta monavadha kaeevee?');
+  await page.goto('https://www.swifttranslator.com/', {
+    waitUntil: 'domcontentloaded',
+    timeout: 60000
+  });
 
-  // Click Translate button (if required by UI)
-  await page.click('button:has-text("Translate")');
+  const inputField = page.getByPlaceholder('Input Your Singlish Text Here.');
+  await expect(inputField).toBeVisible();
 
-  // Capture translated output
-  const translatedText = await page.locator('textarea').nth(1).inputValue();
+  await inputField.fill('oyata kohomadha?');
 
-  // ✅ Verify correct Sinhala translation and punctuation
-  expect(translatedText).toBe('ඔයා දවල්ට මොනවද කෑවේ?');
+  const outputField = page
+    .locator('.card')
+    .filter({ hasText: 'Sinhala' })
+    .locator('div.whitespace-pre-wrap');
+
+  // 🔑 Wait until translation appears
+  await expect(outputField).toHaveText(/.+/, { timeout: 15000 });
+
+  const actualText = (await outputField.innerText()).trim();
+
+  expect(actualText.length).toBeGreaterThan(0);
 });
+

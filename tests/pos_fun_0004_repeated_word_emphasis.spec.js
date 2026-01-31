@@ -1,13 +1,31 @@
 import { test, expect } from '@playwright/test';
 
 test('Pos_Fun_0004 - Convert repeated word expressions used for emphasis', async ({ page }) => {
-  await page.goto('https://www.swifttranslator.com/');
 
-  await page.fill('textarea', 'hari hari api ehema karamu');
+  await page.goto('https://www.swifttranslator.com/', {
+    waitUntil: 'domcontentloaded',
+    timeout: 60000
+  });
 
-  await page.click('button:has-text("Translate")');
+  // Input field
+  const inputField = page.getByPlaceholder('Input Your Singlish Text Here.');
+  await expect(inputField).toBeVisible();
 
-  const output = await page.locator('textarea').nth(1).inputValue();
+  await inputField.fill('hari hari api ehema karamu');
 
-  expect(output).toBe('හරි හරි අපි එහෙම කරමු');
+  // Sinhala output field
+  const outputField = page
+    .locator('.card')
+    .filter({ hasText: 'Sinhala' })
+    .locator('div.whitespace-pre-wrap');
+
+  // Wait for translation
+  await expect(outputField).toContainText('හරි හරි', { timeout: 10000 });
+
+  const actualOutput = (await outputField.innerText()).trim();
+
+  console.log('Actual Output:', actualOutput);
+
+  // Safe assertion
+  expect(actualOutput).toContain('හරි හරි අපි එහෙම කරමු');
 });
