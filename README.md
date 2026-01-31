@@ -10,7 +10,7 @@ This repository contains automated UI and functional test cases implemented usin
 
 ## Installation Steps
 1. Clone the repository:
-   git clone <YOUR_GIT_REPO_LINK>
+   git clone <https://github.com/uthkarsharanasinghe2003/playwright-swift-translator-tests.git>
 
 2. Navigate to the project folder:
    cd playwright-project
@@ -30,4 +30,4 @@ Run tests in UI mode:
 - playwright.config.js : Playwright configuration file
 
 ## Author
-Student Name
+R M U A RANASINGHE
